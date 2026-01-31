@@ -23,6 +23,11 @@ COPY scripts ./scripts
 
 RUN pnpm install --frozen-lockfile
 
+# Hotfix: Google started rejecting older Antigravity UA versions.
+# Keep pi-* deps pinned (0.49.3) but bump UA string used by @mariozechner/pi-ai.
+RUN sed -i 's/antigravity\/1\.11\.5/antigravity\/1.12.0/g' \
+    node_modules/@mariozechner/pi-ai/dist/providers/google-gemini-cli.js
+
 COPY . .
 RUN OPENCLAW_A2UI_SKIP_MISSING=1 pnpm build
 # Force pnpm for UI build (Bun may fail on ARM/Synology architectures)
